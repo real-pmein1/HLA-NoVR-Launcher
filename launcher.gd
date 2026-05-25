@@ -11,7 +11,7 @@ const CONFIG_PATH = "user://config.ini"
 const GAME_MENU_SCENE = preload("res://game_menu.tscn")
 const ICON_MUTE = preload("res://icons/mute.svg")
 const ICON_VOLUME = preload("res://icons/volume.svg")
-const GITHUB_USER = "HLANoVR"
+const GITHUB_USER = "real-pmein1"
 const VALID_BRANCHES = ["main", "mods", "steam_deck", "next"]
 
 @onready var config = ConfigFile.new()
