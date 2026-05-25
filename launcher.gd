@@ -115,13 +115,14 @@ func _ready() -> void:
 	if OS.get_cmdline_args().has("-debug"):
 		launcher_ready.emit()
 	else:
+		launcher_ready.emit()
 		# Request newest launcher version
-		var newest_version := "https://api.github.com/repos/" + GITHUB_USER + "/HLA-NoVR-Launcher/releases/latest"
-		var error_launcher = http_request_launcher_version.request(newest_version)
-		if error_launcher != OK:
-			accept_dialog.dialog_text = "An error (%s) occurred while creating the HTTP request." % error_launcher
-			accept_dialog.show()
-			launcher_ready.emit()
+		#var newest_version := "https://api.github.com/repos/" + GITHUB_USER + "/HLA-NoVR-Launcher/releases/latest"
+		#var error_launcher = http_request_launcher_version.request(newest_version)
+		#if error_launcher != OK:
+		#	accept_dialog.dialog_text = "An error (%s) occurred while creating the HTTP request." % error_launcher
+		#	accept_dialog.show()
+		#	launcher_ready.emit()
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -303,6 +304,13 @@ func translate_key_name(input: String) -> String:
 
 
 func _on_button_play_pressed() -> void:
+	# Launch the game with the default menu
+	if check_box_default_game_menu.button_pressed or mod_branch.text == "steam_deck":
+		mod_use_default_game_menu = true
+
+	mod_ready_to_play.emit()
+	return
+
 	if not verify_installation_path(installation_path):
 		background_video.paused = true
 		file_dialog_installation.show()
@@ -318,10 +326,6 @@ func _on_button_play_pressed() -> void:
 		accept_dialog.dialog_text = "Invalid branch name. Please set Mod branch to 'main', 'mods' or 'steam_deck'"
 		accept_dialog.show()
 		return
-
-	# Launch the game with the default menu
-	if check_box_default_game_menu.button_pressed or mod_branch.text == "steam_deck":
-		mod_use_default_game_menu = true
 
 	if OS.get_cmdline_args().has("-debug") and not check_box_force_mod_reinstall.button_pressed:
 		mod_ready_to_play.emit()
@@ -400,6 +404,9 @@ func _on_http_request_launcher_helper_request_completed(result: int, response_co
 
 
 func _on_http_request_launcher_version_request_completed(result: int, response_code: int, headers: PackedStringArray, body: PackedByteArray) -> void:
+	launcher_ready.emit()
+	return
+
 	if result != HTTPRequest.RESULT_SUCCESS:
 		accept_dialog.dialog_text = "An error (%s) occurred in the HTTP request." % result
 		accept_dialog.show()
@@ -431,6 +438,9 @@ func _on_http_request_launcher_version_request_completed(result: int, response_c
 
 
 func _on_http_request_launcher_request_completed(result: int, response_code: int, headers: PackedStringArray, body: PackedByteArray) -> void:
+	launcher_ready.emit()
+	return
+
 	if result != HTTPRequest.RESULT_SUCCESS:
 		accept_dialog.dialog_text = "An error (%s) occurred in the HTTP request." % result
 		accept_dialog.show()
@@ -451,6 +461,9 @@ func _on_http_request_launcher_request_completed(result: int, response_code: int
 
 
 func _on_http_request_mod_version_request_completed(result: int, response_code: int, headers: PackedStringArray, body: PackedByteArray) -> void:
+	mod_ready_to_play.emit()
+	return
+
 	if result != HTTPRequest.RESULT_SUCCESS:
 		accept_dialog.dialog_text = "An error (%s) occurred in the HTTP request." % result
 		accept_dialog.show()
@@ -477,6 +490,8 @@ func _on_http_request_mod_version_request_completed(result: int, response_code: 
 
 
 func _on_http_request_mod_request_completed(result: int, response_code: int, headers: PackedStringArray, body: PackedByteArray) -> void:
+	return
+
 	if result != HTTPRequest.RESULT_SUCCESS:
 		accept_dialog.dialog_text = "An error (%s) occurred in the HTTP request." % result
 		accept_dialog.show()
