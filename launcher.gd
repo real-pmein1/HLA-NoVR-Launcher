@@ -93,7 +93,8 @@ func _ready() -> void:
 		var game_menu_launch_option := "+hlvr_main_menu_delay 999999 +hlvr_main_menu_delay_with_intro 999999 +hlvr_main_menu_delay_with_intro_and_saves 999999 "
 		if mod_use_default_game_menu:
 			game_menu_launch_option = "-defaultmenu "
-		OS.shell_open("steam://run/546560// -novr +vr_enable_fake_vr 1 -condebug " + game_menu_launch_option + custom_launch_options.text + " -window")
+		#OS.shell_open("steam://run/546560// -novr +vr_enable_fake_vr 1 -condebug " + game_menu_launch_option + custom_launch_options.text + " -window")
+		OS.execute_with_pipe('cmd', ['/C', 'cd /D "' + installation_path + '\\game\\bin\\win64\\" && hlvr.exe -novr +vr_enable_fake_vr 1 -condebug ' + game_menu_launch_option + custom_launch_options.text + ' -window'])
 		if mod_use_default_game_menu == false:
 			game_menu = GAME_MENU_SCENE.instantiate()
 			game_menu.launcher = self
