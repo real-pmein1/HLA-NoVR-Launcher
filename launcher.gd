@@ -104,8 +104,8 @@ func _ready() -> void:
 			thread.start(_thread_helper)
 		background_video.stop()
 		content.visible = false
-		label_info.text = "Please confirm the launch of the game on Steam.
-		If you accidentally canceled it or encounter any problems,
+		label_info.text = "The game has now launched.
+		If you accidentally cancelled it or encounter any problems,
 		close the game and restart this launcher."
 		label_info.visible = true
 		if mod_use_default_game_menu:
