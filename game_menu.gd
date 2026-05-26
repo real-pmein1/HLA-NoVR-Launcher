@@ -283,6 +283,23 @@ func write_to_save_cfg_file(key: String, value: Variant) -> void:
 		save_cfg.close()
 
 
+func write_to_machine_cfg_file(key: String, value: Variant) -> void:
+	var save_cfg := FileAccess.open(launcher.installation_path + "/game/hlvr/cfg/machine_convars.vcfg", FileAccess.READ_WRITE)
+	if save_cfg:
+		var content: String
+		while not save_cfg.eof_reached():
+			var line := save_cfg.get_line()
+			if line.is_empty():
+				break
+			if line.contains(key):
+				line = "\t\t\"%s\"\t\t\"%s\"" % [key, value]
+			content += line + "\n"
+		save_cfg.resize(0)
+		save_cfg.seek(0)
+		save_cfg.store_string(content)
+		save_cfg.close()
+
+
 func read_save_cfg_file() -> void:
 	var save_cfg := FileAccess.open(launcher.installation_path + "/game/hlvr/SAVE/personal.cfg", FileAccess.READ)
 	if save_cfg:
@@ -317,8 +334,6 @@ func read_convars_file() -> void:
 					slider_combat_music_volume.value = float(value)
 				"snd_gamevoicevolume":
 					slider_character_voice_volume.value = float(value)
-				"fov_desired":
-					slider_fov.value = float(value)
 				"r_light_sensitivity_mode":
 					if value == "true":
 						_on_button_light_sensitivity_mode_pressed()
@@ -344,6 +359,8 @@ func read_bindings_file() -> void:
 				"INVERT_MOUSE_Y":
 					if value == "true":
 						_on_button_invert_y_pressed()
+				"FOV":
+					slider_fov.value = float(value)
 
 
 func toggle_pause_menu():
@@ -440,7 +457,10 @@ func _on_slider_character_voice_volume_value_changed(value: float) -> void:
 func _on_slider_fov_value_changed(value: float) -> void:
 	label_fov.text = "%s" % value
 	write_to_bindings_file("FOV", int(value))
-	send_game_command("fov_desired %s" % int(value))
+	if pause_menu_mode:
+		send_game_command("fov_desired %s" % int(value))
+	else:
+		write_to_machine_cfg_file("fov_desired", value)
 
 
 func _on_button_graphics_preset_pressed() -> void:
