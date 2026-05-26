@@ -1462,7 +1462,7 @@ theme_override_constants/separation = 10
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
-min_value = 80.0
+min_value = 60.0
 max_value = 110.0
 value = 90.0
 
